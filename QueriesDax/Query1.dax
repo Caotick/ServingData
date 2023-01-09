@@ -1,0 +1,38 @@
+﻿EVALUATE
+VAR c_store_returns =
+    SELECTCOLUMNS (
+        ADDCOLUMNS (
+            CALCULATETABLE (
+                store_returns,
+                date_dim[d_year] = 2000,
+                store[s_state] = "SD",
+                USERELATIONSHIP ( store_returns[sr_returned_date_sk], date_dim[d_date_sk] ),
+                USERELATIONSHIP ( store_returns[sr_customer_sk], customer[c_customer_sk] )
+            ),
+            "c_customer_id", RELATED ( 'customer'[c_customer_id] )
+        ),
+        [c_customer_id],
+        [sr_store_sk],
+        [sr_fee]
+    )
+VAR x =
+    GROUPBY (
+        c_store_returns,
+        [c_customer_id],
+        [sr_store_sk],
+        "ctr_total_return", SUMX ( CURRENTGROUP (), [sr_fee] )
+    )
+VAR y =
+    GROUPBY (
+        SELECTCOLUMNS ( x, [sr_store_sk], [ctr_total_return] ),
+        [sr_store_sk],
+        "avg", AVERAGEX ( CURRENTGROUP (), [ctr_total_return] )
+    )
+RETURN
+    TOPN(100, (FILTER (
+        SELECTCOLUMNS (
+            FILTER ( NATURALINNERJOIN ( x, y ), [ctr_total_return] > 1.2 * [avg] ),
+            [c_customer_id]
+        ),
+        NOT ( ISBLANK ( [c_customer_id] ) )
+    )), [c_customer_id])

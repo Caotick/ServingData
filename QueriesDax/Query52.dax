@@ -1,0 +1,20 @@
+﻿EVALUATE
+
+VAR x = CALCULATETABLE(store_sales,
+		'item'[i_manager_id] = 1,
+		date_dim[d_moy] = 12,
+		date_dim[d_year] = 2002,
+		USERELATIONSHIP(store_sales[ss_sold_date_sk], date_dim[d_date_sk])
+)
+
+RETURN
+TOPN(100,
+	(GROUPBY(
+		x,
+		[d_year],
+		'item'[i_brand],
+		'item'[i_brand_id],
+		"ext_price", SUMX(CURRENTGROUP(), [ss_ext_sales_price])
+	))
+)
+ORDER BY "ext_price" DESC, 'item'[i_brand_id]

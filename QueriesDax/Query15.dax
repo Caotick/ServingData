@@ -1,0 +1,43 @@
+﻿EVALUATE
+VAR x =
+    CALCULATETABLE (
+        catalog_sales,
+        FILTER (
+            customer_address,
+            OR (
+                customer_address[ca_state] IN { "CA", "WA", "GA" },
+                LEFT ( customer_address[ca_zip], 5 )
+                    IN {
+                    "85669",
+                    "86197",
+                    "88274",
+                    "83405",
+                    "86475",
+                    "85392",
+                    "85460",
+                    "80348",
+                    "81792"
+                }
+            )
+        ),
+        date_dim[d_qoy] = 1,
+        date_dim[d_year] = 2001,
+        USERELATIONSHIP ( catalog_sales[cs_bill_customer_sk], customer[c_customer_sk] ),
+        USERELATIONSHIP ( customer[c_current_addr_sk], customer_address[ca_address_sk] ),
+        USERELATIONSHIP ( catalog_sales[cs_sold_date_sk], date_dim[d_date_sk] )
+    )
+RETURN
+    TOPN (
+        100,
+        (
+            FILTER (
+                GROUPBY (
+                    x,
+                    customer_address[ca_zip],
+                    "sum_sales", SUMX ( CURRENTGROUP (), [cs_sales_price] )
+                ),
+                NOT ( ISBLANK ( [ca_zip] ) )
+            )
+        ),
+        [ca_zip]
+    )

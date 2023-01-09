@@ -1,0 +1,104 @@
+{
+    "name": "mydremio-executors",
+    "id": "/subscriptions/dfa0baf6-c947-4b35-b4f8-ca6cf1ff51bd/resourceGroups/mulq_servingdata_dremio/providers/Microsoft.Compute/virtualMachineScaleSets/mydremio-executors",
+    "type": "Microsoft.Compute/virtualMachineScaleSets",
+    "location": "westeurope",
+    "plan": {
+        "name": "community",
+        "publisher": "dremiocorporation",
+        "product": "dremio-ce-vm"
+    },
+    "sku": {
+        "name": "Standard_E16s_v3",
+        "tier": "Standard",
+        "capacity": 2
+    },
+    "properties": {
+        "singlePlacementGroup": true,
+        "orchestrationMode": "Uniform",
+        "upgradePolicy": {
+            "mode": "Manual"
+        },
+        "virtualMachineProfile": {
+            "osProfile": {
+                "computerNamePrefix": "mydremiol",
+                "adminUsername": "mulq",
+                "linuxConfiguration": {
+                    "disablePasswordAuthentication": false,
+                    "provisionVMAgent": true
+                },
+                "secrets": [],
+                "allowExtensionOperations": true,
+                "requireGuestProvisionSignal": true
+            },
+            "storageProfile": {
+                "osDisk": {
+                    "osType": "Linux",
+                    "createOption": "FromImage",
+                    "caching": "ReadWrite",
+                    "managedDisk": {
+                        "storageAccountType": "Premium_LRS"
+                    },
+                    "diskSizeGB": 30
+                },
+                "imageReference": {
+                    "publisher": "dremiocorporation",
+                    "offer": "dremio-ce-vm",
+                    "sku": "community",
+                    "version": "20.1.0"
+                }
+            },
+            "networkProfile": {
+                "networkInterfaceConfigurations": [
+                    {
+                        "name": "mydremioNic",
+                        "properties": {
+                            "primary": true,
+                            "enableAcceleratedNetworking": false,
+                            "disableTcpStateTracking": false,
+                            "dnsSettings": {
+                                "dnsServers": []
+                            },
+                            "enableIPForwarding": false,
+                            "ipConfigurations": [
+                                {
+                                    "name": "mydremioipconfig-executors",
+                                    "properties": {
+                                        "subnet": {
+                                            "id": "/subscriptions/dfa0baf6-c947-4b35-b4f8-ca6cf1ff51bd/resourceGroups/mulq_servingdata_dremio/providers/Microsoft.Network/virtualNetworks/VirtualNetwork/subnets/Subnet-1"
+                                        },
+                                        "privateIPAddressVersion": "IPv4"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "extensionProfile": {
+                "extensions": [
+                    {
+                        "name": "updatescriptextension",
+                        "properties": {
+                            "autoUpgradeMinorVersion": true,
+                            "publisher": "Microsoft.Azure.Extensions",
+                            "type": "CustomScript",
+                            "typeHandlerVersion": "2.0",
+                            "settings": {
+                                "fileUris": [
+                                    "https://catalogartifact.azureedge.net/publicartifacts/dremiocorporation.dremio_ce-b30af993-0fde-44c1-8b39-adac4c511fbc-community/Artifacts/scripts/setupDremio.sh"
+                                ],
+                                "commandToExecute": "bash setupDremio.sh executor 172.17.0.4"
+                            }
+                        }
+                    }
+                ]
+            },
+            "priority": "Regular"
+        },
+        "provisioningState": "Succeeded",
+        "overprovision": true,
+        "doNotRunExtensionsOnOverprovisionedVMs": false,
+        "uniqueId": "1d1e6a14-5d7b-48f5-9d7d-034c29f1a243"
+    }
+}

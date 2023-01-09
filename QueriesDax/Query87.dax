@@ -1,0 +1,27 @@
+﻿EVALUATE
+VAR s = SUMMARIZE(FILTER(SUMMARIZE(
+	CALCULATETABLE(store_sales, USERELATIONSHIP(store_sales[ss_sold_date_sk], date_dim[d_date_sk])),
+	customer[c_last_name],
+	customer[c_first_name],
+	date_dim[d_date],
+	date_dim[d_month_seq]
+), date_dim[d_month_seq] >= 1184 && date_dim[d_month_seq] <= 1195), customer[c_last_name], customer[c_first_name], date_dim[d_date])
+
+VAR c = SUMMARIZE(FILTER(SUMMARIZE(
+	CALCULATETABLE(catalog_sales, USERELATIONSHIP(catalog_sales[cs_sold_date_sk], date_dim[d_date_sk])),
+	customer[c_last_name],
+	customer[c_first_name],
+	date_dim[d_date],
+	date_dim[d_month_seq]
+), date_dim[d_month_seq] >= 1184 && date_dim[d_month_seq] <= 1195), customer[c_last_name], customer[c_first_name], date_dim[d_date])
+
+VAR w = SUMMARIZE(FILTER(SUMMARIZE(
+	CALCULATETABLE(web_sales, USERELATIONSHIP(web_sales[ws_sold_date_sk], date_dim[d_date_sk])),
+	customer[c_last_name],
+	customer[c_first_name],
+	date_dim[d_date],
+	date_dim[d_month_seq]
+), date_dim[d_month_seq] >= 1184 && date_dim[d_month_seq] <= 1195), customer[c_last_name], customer[c_first_name], date_dim[d_date])
+
+RETURN
+ROW("RESULT : ", COUNTROWS(EXCEPT(EXCEPT(s, c), w)))

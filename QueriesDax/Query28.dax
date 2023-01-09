@@ -1,0 +1,57 @@
+﻿EVALUATE
+VAR b1 = SUMMARIZE(FILTER(store_sales, 
+	(([ss_list_price] >= 131 && [ss_list_price] <= 141) 
+	|| ([ss_coupon_amt] >= 16798 && [ss_coupon_amt] <= 17798) 
+	|| ([ss_wholesale_cost] >= 25 && [ss_wholesale_cost] <= 45))
+	&& [ss_quantity] >= 1 && [ss_quantity] <= 5), // SQL's between 0 and 5 seems to be equivalent to between 1 and 5 (at least it seems to) => This might actually be because of NULL values
+	"B1_LP", AVERAGE(store_sales[ss_list_price]), 
+	"B1_CNT", COUNT(store_sales[ss_list_price]), 
+	"B1_CNTD", COUNTROWS(DISTINCT(store_sales[ss_list_price])))
+
+VAR b2 = SUMMARIZE(FILTER(store_sales, 
+	(([ss_list_price] >= 145 && [ss_list_price] <= 155) 
+	|| ([ss_coupon_amt] >= 14792 && [ss_coupon_amt] <= 15792) 
+	|| ([ss_wholesale_cost] >= 46 && [ss_wholesale_cost] <= 66))
+	&& [ss_quantity] >= 6 && [ss_quantity] <= 10), 
+	"B2_LP", AVERAGE(store_sales[ss_list_price]), 
+	"B2_CNT", COUNT(store_sales[ss_list_price]), 
+	"B2_CNTD", COUNTROWS(DISTINCT(store_sales[ss_list_price])))
+
+VAR b3 = SUMMARIZE(FILTER(store_sales, 
+	(([ss_list_price] >= 150 && [ss_list_price] <= 160) 
+	|| ([ss_coupon_amt] >= 6600 && [ss_coupon_amt] <= 7600) 
+	|| ([ss_wholesale_cost] >= 9 && [ss_wholesale_cost] <= 29))
+	&& [ss_quantity] >= 11 && [ss_quantity] <= 15), 
+	"B3_LP", AVERAGE(store_sales[ss_list_price]), 
+	"B3_CNT", COUNT(store_sales[ss_list_price]), 
+	"B3_CNTD", COUNTROWS(DISTINCT(store_sales[ss_list_price])))
+
+VAR b4 = SUMMARIZE(FILTER(store_sales, 
+	(([ss_list_price] >= 91 && [ss_list_price] <= 101) 
+	|| ([ss_coupon_amt] >= 13493 && [ss_coupon_amt] <= 14493) 
+	|| ([ss_wholesale_cost] >= 36 && [ss_wholesale_cost] <= 56))
+	&& [ss_quantity] >= 16 && [ss_quantity] <= 20), 
+	"B4_LP", AVERAGE(store_sales[ss_list_price]), 
+	"B4_CNT", COUNT(store_sales[ss_list_price]), 
+	"B4_CNTD", COUNTROWS(DISTINCT(store_sales[ss_list_price])))
+
+VAR b5 = SUMMARIZE(FILTER(store_sales, 
+	(([ss_list_price] >= 0 && [ss_list_price] <= 10) 
+	|| ([ss_coupon_amt] >= 7629 && [ss_coupon_amt] <= 8629) 
+	|| ([ss_wholesale_cost] >= 6 && [ss_wholesale_cost] <= 26))
+	&& [ss_quantity] >= 21 && [ss_quantity] <= 25), 
+	"B5_LP", AVERAGE(store_sales[ss_list_price]), 
+	"B5_CNT", COUNT(store_sales[ss_list_price]), 
+	"B5_CNTD", COUNTROWS(DISTINCT(store_sales[ss_list_price])))
+
+VAR b6 = SUMMARIZE(FILTER(store_sales, 
+	(([ss_list_price] >= 89 && [ss_list_price] <= 99) 
+	|| ([ss_coupon_amt] >= 15257 && [ss_coupon_amt] <= 16257) 
+	|| ([ss_wholesale_cost] >= 31 && [ss_wholesale_cost] <= 51))
+	&& [ss_quantity] >= 26 && [ss_quantity] <= 30), 
+	"B6_LP", AVERAGE(store_sales[ss_list_price]), 
+	"B6_CNT", COUNT(store_sales[ss_list_price]), 
+	"B6_CNTD", COUNTROWS(DISTINCT(store_sales[ss_list_price])))
+
+RETURN
+UNION(b1, b2, b3, b4, b5, b6) // This does not output the exact same result (not the same shape), but it forces all the vars to be executed

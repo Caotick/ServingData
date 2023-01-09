@@ -1,0 +1,28 @@
+﻿EVALUATE
+var b1 = IF(CALCULATE(COUNTROWS(store_sales), store_sales[ss_quantity] >= 1 && store_sales[ss_quantity] <= 20) > 2972190, 
+			CALCULATE(AVERAGE(store_sales[ss_ext_sales_price]), store_sales[ss_quantity] >= 1 && store_sales[ss_quantity] <= 20),
+			CALCULATE(AVERAGE(store_sales[ss_net_profit]), store_sales[ss_quantity] >= 1 && store_sales[ss_quantity] <= 20)
+		)
+		
+var b2 = IF(CALCULATE(COUNTROWS(store_sales), store_sales[ss_quantity] >= 21 && store_sales[ss_quantity] <= 40) > 4505785, 
+			CALCULATE(AVERAGE(store_sales[ss_ext_sales_price]), store_sales[ss_quantity] >= 21 && store_sales[ss_quantity] <= 40),
+			CALCULATE(AVERAGE(store_sales[ss_net_profit]), store_sales[ss_quantity] >= 21 && store_sales[ss_quantity] <= 40)
+		)
+		
+var b3 = IF(CALCULATE(COUNTROWS(store_sales), store_sales[ss_quantity] >= 41 && store_sales[ss_quantity] <= 60) > 1575726, 
+			CALCULATE(AVERAGE(store_sales[ss_ext_sales_price]), store_sales[ss_quantity] >= 41 && store_sales[ss_quantity] <= 60),
+			CALCULATE(AVERAGE(store_sales[ss_net_profit]), store_sales[ss_quantity] >= 41 && store_sales[ss_quantity] <= 60)
+		)
+		
+var b4 = IF(CALCULATE(COUNTROWS(store_sales), store_sales[ss_quantity] >= 61 && store_sales[ss_quantity] <= 80) > 3188917, 
+			CALCULATE(AVERAGE(store_sales[ss_ext_sales_price]), store_sales[ss_quantity] >= 61 && store_sales[ss_quantity] <= 80),
+			CALCULATE(AVERAGE(store_sales[ss_net_profit]), store_sales[ss_quantity] >= 61 && store_sales[ss_quantity] <= 80)
+		)
+		
+var b5 = IF(CALCULATE(COUNTROWS(store_sales), store_sales[ss_quantity] >= 81 && store_sales[ss_quantity] <= 100) > 3525216, 
+			CALCULATE(AVERAGE(store_sales[ss_ext_sales_price]), store_sales[ss_quantity] >= 81 && store_sales[ss_quantity] <= 100),
+			CALCULATE(AVERAGE(store_sales[ss_net_profit]), store_sales[ss_quantity] >= 81 && store_sales[ss_quantity] <= 100)
+		)
+		
+RETURN
+CALCULATETABLE(ROW("b1", b1, "b2", b2, "b3", b3, "b4", b4, "b5", b5), reason[r_reason_sk] = 1)

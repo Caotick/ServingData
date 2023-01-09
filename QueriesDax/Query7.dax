@@ -1,0 +1,23 @@
+﻿EVALUATE
+VAR x = CALCULATETABLE(
+			store_sales,
+			FILTER(promotion, OR(promotion[p_channel_email] = "N", promotion[p_channel_event] = "N")),
+			date_dim[d_year] = 2001,
+			customer_demographics[cd_gender] = "F",
+			customer_demographics[cd_marital_status] = "W",
+			customer_demographics[cd_education_status] = "College",
+			USERELATIONSHIP(store_sales[ss_item_sk], 'item'[i_item_sk])
+		)
+
+RETURN
+TOPN(100,
+	(
+	GROUPBY(
+		x,
+		[i_item_id],
+		"avg1", AVERAGEX(CURRENTGROUP(), [ss_quantity]),
+		"avg2", AVERAGEX(CURRENTGROUP(), [ss_list_price]),
+		"avg3", AVERAGEX(CURRENTGROUP(), [ss_coupon_amt]),
+		"avg4", AVERAGEX(CURRENTGROUP(), [ss_sales_price])
+	)), [i_item_id]
+)

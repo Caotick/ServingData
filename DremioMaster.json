@@ -1,0 +1,97 @@
+{
+    "name": "mydremio-master",
+    "id": "/subscriptions/dfa0baf6-c947-4b35-b4f8-ca6cf1ff51bd/resourceGroups/mulq_servingdata_dremio/providers/Microsoft.Compute/virtualMachines/mydremio-master",
+    "type": "Microsoft.Compute/virtualMachines",
+    "location": "westeurope",
+    "plan": {
+        "name": "community",
+        "publisher": "dremiocorporation",
+        "product": "dremio-ce-vm"
+    },
+    "properties": {
+        "vmId": "0a7efa5f-c7fb-4662-aa2b-0bc5468a26c8",
+        "hardwareProfile": {
+            "vmSize": "Standard_D4ds_v4"
+        },
+        "storageProfile": {
+            "imageReference": {
+                "publisher": "dremiocorporation",
+                "offer": "dremio-ce-vm",
+                "sku": "community",
+                "version": "20.1.0"
+            },
+            "osDisk": {
+                "osType": "Linux",
+                "name": "mydremio-master_OsDisk_1_b495a98983744bb980ad5d62151fa3c7",
+                "createOption": "FromImage",
+                "caching": "ReadWrite",
+                "managedDisk": {
+                    "id": "/subscriptions/dfa0baf6-c947-4b35-b4f8-ca6cf1ff51bd/resourceGroups/MULQ_SERVINGDATA_DREMIO/providers/Microsoft.Compute/disks/mydremio-master_OsDisk_1_b495a98983744bb980ad5d62151fa3c7"
+                }
+            },
+            "dataDisks": [
+                {
+                    "lun": 0,
+                    "name": "mydremio-master-data-disk",
+                    "createOption": "Attach",
+                    "caching": "ReadWrite",
+                    "managedDisk": {
+                        "id": "/subscriptions/dfa0baf6-c947-4b35-b4f8-ca6cf1ff51bd/resourceGroups/mulq_servingdata_dremio/providers/Microsoft.Compute/disks/mydremio-master-data-disk"
+                    }
+                }
+            ]
+        },
+        "osProfile": {
+            "computerName": "mydremio",
+            "adminUsername": "mulq",
+            "linuxConfiguration": {
+                "disablePasswordAuthentication": false
+            },
+            "secrets": []
+        },
+        "networkProfile": {
+            "networkInterfaces": [
+                {
+                    "id": "/subscriptions/dfa0baf6-c947-4b35-b4f8-ca6cf1ff51bd/resourceGroups/mulq_servingdata_dremio/providers/Microsoft.Network/networkInterfaces/mydremio-nic"
+                }
+            ]
+        },
+        "provisioningState": "Succeeded"
+    },
+    "resources": [
+        {
+            "name": "configScript",
+            "id": "/subscriptions/dfa0baf6-c947-4b35-b4f8-ca6cf1ff51bd/resourceGroups/mulq_servingdata_dremio/providers/Microsoft.Compute/virtualMachines/mydremio-master/extensions/configScript",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "location": "westeurope",
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "provisioningState": "Succeeded",
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "settings": {
+                    "fileUris": [
+                        "https://catalogartifact.azureedge.net/publicartifacts/dremiocorporation.dremio_ce-b30af993-0fde-44c1-8b39-adac4c511fbc-community/Artifacts/scripts/setupDremio.sh"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "OmsAgentForLinux",
+            "id": "/subscriptions/dfa0baf6-c947-4b35-b4f8-ca6cf1ff51bd/resourceGroups/mulq_servingdata_dremio/providers/Microsoft.Compute/virtualMachines/mydremio-master/extensions/OmsAgentForLinux",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "location": "westeurope",
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "provisioningState": "Succeeded",
+                "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                "type": "OmsAgentForLinux",
+                "typeHandlerVersion": "1.0",
+                "settings": {
+                    "workspaceId": "b165ef3e-1a45-4ade-9ecd-d4c9ce045263"
+                }
+            }
+        }
+    ]
+}

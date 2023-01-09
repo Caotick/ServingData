@@ -1,0 +1,13 @@
+﻿EVALUATE
+
+ROW("sum", SUMX(FILTER(NATURALINNERJOIN(CALCULATETABLE(SELECTCOLUMNS(catalog_sales, [cs_item_sk], [cs_sold_date_sk], [cs_ext_discount_amt]), 
+				'item'[i_manufact_id] = 29,
+				date_dim[d_date] >= dt"1999-01-07",
+				date_dim[d_date] <= dt"1999-01-07" + 90,
+				USERELATIONSHIP(catalog_sales[cs_sold_date_sk], date_dim[d_date_sk])
+)	, SUMMARIZE(CALCULATETABLE(SELECTCOLUMNS(catalog_sales, [cs_item_sk], [cs_sold_date_sk], [cs_ext_discount_amt]),
+			date_dim[d_date] >= dt"1999-01-07", 
+			date_dim[d_date] <= dt"1999-01-07" + 90, 
+			USERELATIONSHIP(catalog_sales[cs_sold_date_sk], date_dim[d_date_sk])), 
+	catalog_sales[cs_item_sk], "avg", AVERAGE(catalog_sales[cs_ext_discount_amt]))
+), [cs_ext_discount_amt] > 1.3 * [avg]), [cs_ext_discount_amt]))

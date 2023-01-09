@@ -1,0 +1,14 @@
+﻿EVALUATE
+	TOPN(
+		100,
+		(
+			CALCULATETABLE(
+				SUMMARIZE(
+					CALCULATETABLE('inventory', FILTER(date_dim, date_dim[d_month_seq] >= 1188 && date_dim[d_month_seq] <= 1199)),
+					ROLLUP('item'[i_product_name], 'item'[i_brand], 'item'[i_class], 'item'[i_category]),
+					"qoh", AVERAGE('inventory'[inv_quantity_on_hand])
+				)
+			)
+		)
+	)
+ORDER BY "qoh", 'item'[i_product_name], 'item'[i_brand], 'item'[i_class], 'item'[i_category]

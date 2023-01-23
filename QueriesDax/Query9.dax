@@ -25,4 +25,4 @@ var b5 = IF(CALCULATE(COUNTROWS(store_sales), store_sales[ss_quantity] >= 81 && 
 		)
 		
 RETURN
-CALCULATETABLE(ROW("b1", b1, "b2", b2, "b3", b3, "b4", b4, "b5", b5), reason[r_reason_sk] = 1)
+SELECTCOLUMNS(CROSSJOIN(ROW("b1", b1, "b2", b2, "b3", b3, "b4", b4, "b5", b5), FILTER(reason, reason[r_reason_sk] = 1)), "b1", [b1], "b2", [b2], "b3", [b3], "b4", [b4], "b5", [b5])
